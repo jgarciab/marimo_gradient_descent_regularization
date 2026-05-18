@@ -533,7 +533,11 @@ def intro(mo, style):
                 "- Tune model complexity to find a good balance between bias and variance."
             ),
             mo.md(
-                "In the first sections, the model is already specified: for example, we have decided to use a straight line with a particular predictor. The task is then to estimate the coefficient values. Later sections ask a different question: how flexible should the model be? Regularization, validation prediction error, cross-validation, and standardization help us tune that flexibility so we do not underfit or overfit."
+                "In sections 1-2, the model is already specified: for example, we have decided to use a linear regression, such as "
+                r"$y = \beta_0 + \beta_1 x$. "
+                "The task is then to estimate the coefficient values"
+                r" (the $\beta$s). "
+                "Sections 3-8 ask a different question: how flexible should the model be? Regularization help us tune the flexibility of linear regression so we do not underfit or overfit."
             ),
             mo.md(
                 "How to use it: move one control at a time, watch which plot or result changes, and then read the note, takeaway, and questions. Where a `Recreate data` button appears, it draws a new synthetic dataset, so small differences across clicks are part of the lesson."
@@ -608,13 +612,13 @@ def s1_section(
                 "1. Model fitting: Gradient Descent with One Coefficient",
                 "Let's start with the simplest case: one coefficient and one loss curve.",
                 (
-                    "The goal is to estimate the coefficients of a pre-specified model:\n\n"
-                    r"\[\hat{y} = \beta_1 x \quad (\beta_0 = 0)\]"
+                    "The goal is to estimate the coefficients of a pre-specified model: "
+                    r"$\hat{y} = \beta_1 x \quad (i.e., \beta_0 = 0)$."
                     "\n\n"
-                    "Gradient descent is a rule for moving a coefficient in the direction that lowers MSE.\n\n"
-                    "This section shows the same information in two views: the fitted line on the left and the loss curve on the right. You will experience how gradient descent moves the coefficient towards the minimum using the update rule:\n\n"
-                    r"\[\beta_1^{(t+1)} = \beta_1^{(t)} - \alpha \,\frac{\partial \mathrm{MSE}}{\partial \beta_1}\!\left(\beta_1^{(t)}\right)\]"
+                    "Gradient descent is a rule for moving a coefficient in the direction that lowers MSE: "
+                    r"$\beta_1^{(t+1)} = \beta_1^{(t)} - \alpha \left. \frac{\partial \mathrm{MSE}}{\partial \beta_1} \right|_{\beta_1=\beta_1^{(t)}}$"
                     "\n\n"
+                    "This section shows the same information in two views: the fitted line on the left and the loss curve on the right. You will experience how gradient descent moves the coefficient towards the optimal value using the update rule.\n\n"
                     "Try this first: increase the number of steps, then change the learning rate. Changing the learning rate changes the path, not the location of the minimum."
                 ),
             ),
@@ -628,7 +632,7 @@ def s1_section(
                     else "The path shows repeated downhill updates on one fixed objective."
                 )
             ),
-            takeaway_md("Optimization is about how we reach the minimum. It does not change which coefficient gives the lowest MSE."),
+            takeaway_md("Optimization (gradient descent) is about how we reach the minimum. It does not change which coefficient gives the lowest MSE."),
             questions_md(
                 [
                     "What does gradient descent change at each step: the coefficient, the data, or the loss function?",
@@ -713,7 +717,7 @@ def s2_section(
                     "Here too the model form is fixed:\n\n"
                     r"\[\hat{y} = \beta_0 + \beta_1 x\]"
                     "\n\n"
-                    "With two coefficients, the optimization picture changes from a curve to contours. That makes it easier to see why the path can bend or zig-zag."
+                    "With two coefficients, the optimization picture changes from a curve to contours. Darker colors have lower MSE values."
                 ),
             ),
             two_col(mo.as_html(_fig), _sidebar),
@@ -743,7 +747,6 @@ def s3_section(
     mo,
     mse_1p,
     mse_color,
-    note_md,
     np,
     penalty_color,
     penalty_contribution,
@@ -793,23 +796,23 @@ def s3_section(
     _layout = mo.vstack(
         [
             section_md(
-                "3. Regularization: Adding a Penalty to the Loss",
-                "Regularization adds a penalty term to the objective. It does not replace MSE.",
+                "3. Regularization with one coefficient: Adding a Penalty to the Loss to avoid Overfitting",
+                "Regularization adds a penalty term to the objective that discourages overly large coefficients. Here we show the case with one predictor to build the understanding. But regularization is useful when you have many predictors.",
                 (
-                    "The model form is still fixed:\n\n"
-                    r"\[\hat{y} = \beta_1 x \quad (\beta_0 = 0)\]"
+                    "The model form is still fixed: "
+                    r"$\hat{y} = \beta_1 x \quad (\beta_0 = 0)$"
                     "\n\n"
                     "We still want to find the best coefficient value. What changes is the loss we minimize:\n\n"
                     r"\[\text{Loss} = \mathrm{MSE} + \lambda \times \text{penalty}\]"
                     "\n\n"
-                    "We can minimize this loss with gradient descent or with other optimization methods. MSE still measures how well the line matches the observed data. Regularization adds a second term that discourages large coefficients. In plain language, the model now has to balance fit (MSE) on training data against coefficient size.\n\n"
-                    "Changing $\\lambda$ does not move the MSE curve. It changes how strongly coefficient size is punished."
+                    "We can minimize this loss with gradient descent or with other optimization methods. MSE still measures how well the line matches the observed data. The penalty term that discourages large coefficients. Changing $\\lambda$ does not move the MSE curve. It changes how strongly coefficient size is punished. In plain language, the model now has to balance fit (MSE) on training data against coefficient size.\n\n"
+                    "There are two main ways to discourage large coefficients, using Ridge (L2) or LASSO (L1). Ridge penalizes the square value of the coefficients. LASSO the absolute value of the coefficients."
                 ),
             ),
             mo.md(r"$L_{\mathrm{ridge}}(\beta_1) = \mathrm{MSE}(\beta_1) + \lambda \beta_1^2$"),
             mo.md(r"$L_{\mathrm{lasso}}(\beta_1) = \mathrm{MSE}(\beta_1) + \lambda |\beta_1|$"),
+            mo.md(r"Read the plots together: the **top-left** plot shows the fitted line, while the other three plots show how each value of $\beta_1$ changes the **MSE**, the **penalty**, and the combined **total cost**. The dashed vertical line marks the selected/optimal $\beta_1$, where the regularized objective is minimized."),
             two_col(mo.as_html(_fig), _sidebar),
-            note_md("The three objective panels use the same y-axis. This makes the penalty visible as a real part of the cost, not just an abstract formula."),
             takeaway_md("$\\lambda$ only acts through the penalty term. That is why the cost minimum can move even though the MSE curve stays the same."),
             questions_md(
                 [
@@ -919,18 +922,20 @@ def s4_section(
     _layout = mo.vstack(
         [
             section_md(
-                "4. L1 vs L2: Why Ridge and Lasso Behave Differently",
-                "The data are the same, but the penalty changes which coefficient values look best.",
+                "4. Regularization with two coefficients: Adding a Penalty to the Loss to avoid Overfitting",
                 (
-                    "The model form is still fixed:\n\n"
-                    r"\[\hat{y} = \beta_0 + \beta_1 x\]"
-                    "\n"
-                    "We still want to find the best values of $\\beta_0$ and $\\beta_1$. What changes is the loss we minimize:\n\n"
-                    r"\[\text{Loss} = \mathrm{MSE} + \lambda \times \text{penalty}\]"
-                    "\n"
-                    "We can minimize this loss with gradient descent or with other optimization methods.\n\n"
-                    "With two coefficients, the penalty becomes a surface. Ridge makes that surface smooth and round, while lasso makes it point toward the axes.\n\n"
-                    "This helps explain why lasso can set coefficients exactly to zero, while ridge usually shrinks coefficients without making them exactly zero.\n\n"
+                    "The model form is still fixed: "
+                    r"$\hat{y} = \beta_0 + \beta_1 x$"
+                    "\n\n"
+                    "We still want to find the best values of $\\beta_0$ and $\\beta_1$. The loss we minimize is still: "
+                    r"$\text{Loss} = \mathrm{MSE} + \lambda \times \text{penalty}$"
+                    "\n\n"
+                
+                    "With two coefficients, the penalty becomes a surface. Ridge makes that surface smooth and round, while lasso makes it as a diamond. This helps explain why lasso can set coefficients exactly to zero, while ridge usually shrinks coefficients without making them exactly zero.\n\n"
+            r"Ridge: $L_{\mathrm{ridge}}(\beta_1) = \mathrm{MSE}(\beta_1) + \lambda \beta_1^2$" "\n\n"
+            r"LASSO: $L_{\mathrm{lasso}}(\beta_1) = \mathrm{MSE}(\beta_1) + \lambda |\beta_1|$" "\n\n"
+                    r"Read the plots together: the **top-left** plot shows the fitted line, while the other three plots show how the $\beta$s changes the **MSE**, the **penalty**, and the combined **total cost**. The star marks the selected/optimal $\beta$s, where the regularized objective is minimized."
+                    "\n\n"
                     "**Important simplification.** In real regularized regression, the intercept is usually **not** penalized. This display penalizes both coefficients only for didactic purposes: it lets you see how the whole fitted line moves as the penalty geometry changes."
                 ),
             ),
@@ -1028,12 +1033,13 @@ def s5_section(
                 "5. Choosing Lambda with Validation",
                 "Now the question is not how to fit coefficients, but which regularization strength generalizes best.",
                 (
-                    "The dataset here has one true signal, one correlated copy of that signal, and three pure noise variables:\n\n"
+                    "Let's imagine we have some data, with five variables (Signal, Copy, Noise1, Noise2, Noise3). One true signal, one correlated copy of that signal, and three pure noise variables:\n\n"
                     r"\[y = 1 + 1.8\,\mathrm{Signal} + \varepsilon,\qquad \mathrm{Copy} = 0.88\,\mathrm{Signal} + \eta\]"
                     "\n\n"
                     "`Copy` is deliberately similar to `Signal`, but it is not part of the true equation for `y`. The noise variables are unrelated to `y`.\n\n"
-                    "We will fit models using `Signal`, `Copy`, and the noise variables, then try to estimate the true prediction pattern from data. The signal is deliberately not overwhelming, so choosing lambda is not trivial.\n\n"
-                    "For each candidate lambda, we fit the model on the training data and choose among the candidates using **validation prediction error**. The left plot shows why training error is not enough. The right plot shows how the coefficients change as lambda grows. In plain language, lambda is a complexity dial: low lambda gives the model more freedom, high lambda restrains it."
+                    "We will fit models using `Signal`, `Copy`, and the noise variables, then try to estimate the true prediction pattern from data. A standard linear regression would give a coefficient to each predictor (i.e., will overfit)."
+                    "\n\n"
+                    "For each candidate lambda, we fit the model on the training data to minimize the loss and choose among the candidates using **validation MSE** (i.e. not the loss). Regularization makes the model generalize better (plot in the left). The right plot shows how the coefficients change as lambda grows. In plain language, lambda is a complexity dial: low lambda gives the model more freedom, high lambda restrains it."
                 ),
             ),
             mo.md(r"$\lambda^* = \arg\min_{\lambda}\ \mathrm{MSE}_{\mathrm{validation}}(\lambda)$"),
@@ -1080,7 +1086,7 @@ def s6_section(
     takeaway_md,
     two_col,
 ):
-    _dataset = simulate_selection_data(n_samples=50, seed=2110 + int(s6_recreate.value or 0))
+    _dataset = simulate_selection_data(n_samples=100, seed=2110 + int(s6_recreate.value or 0))
     _X = np.asarray(_dataset["X"], dtype=float)
     _y = np.asarray(_dataset["y"], dtype=float)
     _names = list(_dataset["names"])
@@ -1125,7 +1131,7 @@ def s6_section(
                 "One train-validation split can make lambda selection look more certain than it really is.",
                 (
                     "This uses the same kind of synthetic data as the previous section: one real signal, a correlated copy, and several noise variables.\n\n"
-                    "Both curves come from the same dataset. The only difference is which observations happened to land in the validation set.\n\n"
+                    "Both curves in the plots come from the same dataset. The only difference is which observations happened to land in the validation set.\n\n"
                     "When the chosen lambda changes across plausible splits, that is a warning sign that a single validation split is not stable enough to trust on its own. In plain language, the split can be a little lucky or unlucky."
                 ),
             ),
@@ -1175,7 +1181,7 @@ def s7_section(
     takeaway_md,
     two_col,
 ):
-    _dataset = simulate_selection_data(n_samples=50, seed=2210 + int(s7_recreate.value or 0))
+    _dataset = simulate_selection_data(n_samples=100, seed=2210 + int(s7_recreate.value or 0))
     _X = np.asarray(_dataset["X"], dtype=float)
     _y = np.asarray(_dataset["y"], dtype=float)
     _names = list(_dataset["names"])
@@ -1305,7 +1311,7 @@ def s8_section(
                 "8. Standardization Makes the Penalty Fair",
                 "Ridge and lasso penalize coefficient size, and coefficient size depends on measurement units.",
                 (
-                    "This synthetic example has two useful signals and two useless noise variables. The true signal is:\n\n"
+                    "Let's use another synthetic dataset. This synthetic example has two useful signals and two useless noise variables. The true signal is:\n\n"
                     r"\[y = \beta_0 + \beta_a a + \beta_b b + \varepsilon\]"
                     "\n\n"
                     "`a (signal)` and `c (noise)` are stored in small units. `b (signal)` and `d (noise)` are stored on a scale about 100 times larger.\n\n"
