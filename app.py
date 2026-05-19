@@ -805,7 +805,7 @@ def s3_section(
                     "We still want to find the best coefficient value. What changes is the loss we minimize:\n\n"
                     r"\[\text{Loss} = \mathrm{MSE} + \lambda \times \text{penalty}\]"
                     "\n\n"
-                    "We can minimize this loss with gradient descent or with other optimization methods. MSE still measures how well the line matches the observed data. The penalty term that discourages large coefficients. Changing $\\lambda$ does not move the MSE curve. It changes how strongly coefficient size is punished. In plain language, the model now has to balance fit (MSE) on training data against coefficient size.\n\n"
+                    "We can minimize this loss with optimization methods similar to gradient descent. MSE still measures how well the line matches the observed data. The penalty term that discourages large coefficients. Changing $\\lambda$ does not move the MSE curve. It changes how strongly coefficient size is punished. In plain language, the model now has to balance fit (MSE) on training data against coefficient size.\n\n"
                     "There are two main ways to discourage large coefficients, using Ridge (L2) or LASSO (L1). Ridge penalizes the square value of the coefficients. LASSO the absolute value of the coefficients."
                 ),
             ),
