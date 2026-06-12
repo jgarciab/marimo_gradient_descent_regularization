@@ -528,6 +528,9 @@ def intro(mo, style):
             mo.Html(style),
             mo.md("# Fitting Models and Controlling Complexity: Gradient Descent and Regularization"),
             mo.md(
+                "*Javier Garcia-Bernardo — ODISSEI Social Data Science team (SoDa) & Department of Methodology and Statistics, Utrecht University*"
+            ),
+            mo.md(
                 "This app builds intuition about two linked tasks in predictive modeling:\n\n"
                 "- Estimate the coefficients for a specified model.\n"
                 "- Tune model complexity to find a good balance between bias and variance."
@@ -1330,6 +1333,18 @@ def s8_section(
         gap=0.30,
     )
     _layout
+    return
+
+
+@app.cell
+def footer(mo):
+    mo.md(
+        """
+        ---
+
+        _Javier Garcia-Bernardo — SoDa & Utrecht University._
+        """
+    )
     return
 
 
